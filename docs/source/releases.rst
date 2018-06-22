@@ -2,6 +2,40 @@
 Release Notes
 =============
 
+Version 0.5.14
+^^^^^^^^^^^^^^
+**Release Date**: 2018-06-21
+
+Build
+~~~~~
+- Utilized `cancel_order` in paper mode and fixed minor issues in live mode
+  :issue:`95`, :issue:`346`
+
+Bug Fixes
+~~~~~~~~~
+- Added a retry mechanism to the handling of an order request timeout
+  :issue:`350`, :issue:`356`
+- Docker image file was utilized :issue:`366`
+- Fixed the `ordered_pip` script used for the development environment
+  installation :issue:`351`
+- Fixed bugs in the `get_order` function :issue:`367` :issue:`372`
+- Updated the observed portfolio balance :issue:`373`
+
+Version 0.5.13
+^^^^^^^^^^^^^^
+**Release Date**: 2018-06-07
+
+Build
+~~~~~
+- Added functions to marketplace client to get withdraw amount entitled to
+  and to withdraw ENG as well.
+- Updates to handle web3 upgrade on the marketplace.
+
+Bug Fixes
+~~~~~~~~~
+- Pull request :issue:`334`.
+- Raise error when trying to ingest non existing data.
+
 Version 0.5.12
 ^^^^^^^^^^^^^^
 **Release Date**: 2018-05-23
