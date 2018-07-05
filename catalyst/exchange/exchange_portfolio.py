@@ -95,14 +95,13 @@ class ExchangePortfolio(Portfolio):
 
         self.capital_used += order.amount * transaction.price
 
-        if order.amount > 0:
-            if order_position.cost_basis > 0:
-                order_position.cost_basis = np.average(
-                    [order_position.cost_basis, transaction.price],
-                    weights=[order_position.amount, order.amount]
-                )
-            else:
-                order_position.cost_basis = transaction.price
+        if order_position.cost_basis > 0:
+            order_position.cost_basis = np.average(
+                [order_position.cost_basis, transaction.price],
+                weights=[order_position.amount, order.amount]
+            )
+        else:
+            order_position.cost_basis = transaction.price
 
         log.debug('updated portfolio with executed order')
 
