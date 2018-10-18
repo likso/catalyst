@@ -85,6 +85,7 @@ class ExchangeTradingAlgorithmBase(TradingAlgorithm):
             get_spot_value_attempts=5,
             get_history_window_attempts=5,
             retry_sleeptime=5,
+            get_orderbook_attempts=5,
         )
 
         self.blotter = ExchangeBlotter(
@@ -153,17 +154,17 @@ class ExchangeTradingAlgorithmBase(TradingAlgorithm):
             self.blotter.commission_models[key].taker = taker
 
     @api_method
-    def set_slippage(self, spread=None):
-        """Set the spread of the slippage model for the simulation.
+    def set_slippage(self, slippage=None):
+        """Set the slippage of the fixed slippage model used by the simulation.
 
         Parameters
         ----------
-        spread : float
-            The spread to be set.
+        slippage : float
+            The slippage to be set.
         """
         key = list(self.blotter.slippage_models.keys())[0]
-        if spread is not None:
-            self.blotter.slippage_models[key].spread = spread
+        if slippage is not None:
+            self.blotter.slippage_models[key].slippage = slippage
 
     def _calculate_order(self, asset, amount,
                          limit_price=None, stop_price=None, style=None):
@@ -1085,7 +1086,8 @@ class ExchangeTradingAlgorithmLive(ExchangeTradingAlgorithmBase):
         )
 
     @api_method
-    def get_order(self, order_id, asset_or_symbol=None, return_price=False):
+    def get_order(self, order_id, asset_or_symbol=None,
+                  return_price=False, params={}):
         """Lookup an order based on the order id returned from one of the
         order functions.
 
@@ -1097,6 +1099,8 @@ class ExchangeTradingAlgorithmLive(ExchangeTradingAlgorithmBase):
             The asset or the tradingPair symbol of the order.
         return_price: bool
             get the trading price in addition to the order
+        params: dict, optional
+            Extra parameters to pass to the exchange
 
         Returns
         -------
@@ -1113,7 +1117,7 @@ class ExchangeTradingAlgorithmLive(ExchangeTradingAlgorithmBase):
             sleeptime=self.attempts['retry_sleeptime'],
             retry_exceptions=(ExchangeRequestError,),
             cleanup=lambda: log.warn('Fetching orders again.'),
-            args=(order_id, asset_or_symbol, return_price)
+            args=(order_id, asset_or_symbol, return_price, params)
         )
 
     @api_method
@@ -1150,3 +1154,34 @@ class ExchangeTradingAlgorithmLive(ExchangeTradingAlgorithmBase):
             self.blotter.cancel(order_id)
         else:
             self.blotter.cancel(order_id)
+
+    def _get_orderbook(self, asset, order_type='all', limit=None):
+        exchange = self.exchanges[asset.exchange]
+        return exchange.get_orderbook(asset, order_type, limit)
+
+    @api_method
+    def get_orderbook(self, asset, order_type='all', limit=None):
+        """
+        Retrieve the orderbook for the given trading pair.
+
+        Parameters
+        ----------
+        asset: TradingPair
+
+        order_type: str
+            The type of orders: bid, ask or all
+
+        limit: int
+
+        Returns
+        -------
+        list[dict[str, float]
+        """
+        return retry(
+            action=self._get_orderbook,
+            attempts=self.attempts['get_orderbook_attempts'],
+            sleeptime=self.attempts['retry_sleeptime'],
+            retry_exceptions=(ExchangeRequestError,),
+            cleanup=lambda: log.warn('Requesting order book again'),
+            args=(asset, order_type, limit),
+        )

@@ -67,6 +67,9 @@ Orders
 
 .. autofunction:: catalyst.api.cancel_order
 
+.. autofunction:: catalyst.api.get_orderbook
+
+
 Order Cancellation Policies
 '''''''''''''''''''''''''''
 
@@ -134,7 +137,7 @@ Commission Models
 Slippage Models
 '''''''''''''''
 
-.. .. autofunction:: catalyst.api.set_slippage
+.. autofunction:: catalyst.api.set_slippage
 
 .. autoclass:: catalyst.finance.slippage.SlippageModel
    :members:
