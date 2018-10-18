@@ -1,6 +1,41 @@
 =============
 Release Notes
 =============
+Version 0.5.20
+^^^^^^^^^^^^^^
+**Release Date**: 2018-09-13
+
+Build
+~~~~~
+- Utilize the `trading_state` attribute of the `TradingPair` object - in live
+  and paper trading ONLY :issue:`460`
+- Introduced a first WIP version for running backtest strategies on a
+  remote server
+
+Version 0.5.19
+^^^^^^^^^^^^^^
+**Release Date**: 2018-09-04
+
+Build
+~~~~~
+- Upgraded `CCXT` version to 1.17.94
+- Added the `get_orderbook` function to the API.
+- Aligned the `data.current` to crypto OHLCV left labeling.
+- Added the support for live trading in Huobi Pro, OKEx, HitBTC and KuCoin.
+
+Bug Fixes
+~~~~~~~~~
+- Fixed the timeout handling in `get_candles` function :issue:`420`
+- Fixed the catalyst conda yml installation on windows :issue:`407`
+
+Version 0.5.18
+^^^^^^^^^^^^^^
+**Release Date**: 2018-07-22
+
+Build
+~~~~~
+- The parameter of the `set_slippage` API function was updated from spread to
+  slippage to better describe its purpose in the fixed slippage model.
 
 Version 0.5.17
 ^^^^^^^^^^^^^^
